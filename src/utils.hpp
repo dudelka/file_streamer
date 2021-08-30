@@ -37,7 +37,7 @@ class Timer : public Multithreaded {
 public:
     Timer(std::shared_ptr<Multithreaded> multithreaded, const uint32_t timeout);
 
-    void Run() override;
+    virtual void Run() override;
     void NotifyHasInput();
 
 private:

@@ -26,8 +26,8 @@ public:
     void Connect(std::shared_ptr<Sender> sender);
     void Shutdown(std::shared_ptr<Sender> sender);
 
-    void Run() override;
-    void Stop() override;
+    virtual void Run() override;
+    virtual void Stop() override;
 
     // pair file_id -> file_checksum
     std::vector<std::pair<uint32_t, uint32_t>> GetSentChecksums();
@@ -61,7 +61,7 @@ public:
     Receiver(const std::string& receive_address, 
         std::shared_ptr<Sender> sender, uint32_t timeout);
 
-    void Run() override;
+    virtual void Run() override;
 
 private:
     Socket sock_;

@@ -23,7 +23,7 @@ public:
     void PushPacket(const Packet& packet);
     void PushPacket(Packet&& packet);
 
-    void Run() override;
+    virtual void Run() override;
 
     void AckPacket(uint32_t id, uint32_t packet_num);
 
