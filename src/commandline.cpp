@@ -14,13 +14,13 @@ void Usage(const std::string& program_name) {
 #ifdef CLIENT_MODE
     std::cerr << "      --file <filename> - file to be sent." << std::endl;
     std::cerr << "      --send_address <ip:port> - address to send files." << std::endl;
-    std::cerr << "      --receive-address <ip:port> - address to receive packets from server." 
+    std::cerr << "      --receive_address <ip:port> - address to receive packets from server." 
         << std::endl;
     std::cerr << "      --timeout <uint32> - timeout in microseconds to resend lost packets. Default is 15 microseconds." 
         << std::endl;
 #elif SERVER_MODE
     std::cerr << "      --send_address <ip:port> - address to send ack packets." << std::endl;
-    std::cerr << "      --receive-address <ip:port> - address to receive packets from client." 
+    std::cerr << "      --receive_address <ip:port> - address to receive packets from client." 
         << std::endl;
     std::cerr << "      --timeout <uint32> - timeout in seconds. If no input on receiver was detected it will be shutdowned. Default is 30 seconds." 
         << std::endl;
@@ -91,7 +91,7 @@ void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
         if (*it == "--send_address") {
             ++it;
             send_address_ = std::move(*it);
-        } else if (*it == "--receive-address") {
+        } else if (*it == "--receive_address") {
             ++it;
             receive_address_ = std::move(*it);
         } 
