@@ -72,6 +72,5 @@ int Socket::InitSocket(const std::string& address, const SocketType type) {
             throw std::runtime_error("Can't bind socket on address " + address);
         }
     }
-
     return sock_;
 }
