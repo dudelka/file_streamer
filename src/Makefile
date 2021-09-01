@@ -40,7 +40,11 @@ $(client_objects): $(client_outdir)/%.o: %.cpp
 $(server_objects): $(server_outdir)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -DSERVER_MODE -c $< -o $@
 
+check:
+	cppcheck --enable=all -DCLIENT_MODE *.cpp *.hpp
+	cppcheck --enable=all -DSERVER_MODE *.cpp *.hpp
+
 clean:
 	rm -r $(outdir) client server
 
-.PHONY: all clean
+.PHONY: all check clean
