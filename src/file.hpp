@@ -8,8 +8,8 @@
 #include <string>
 
 struct FileChunk {
-    uint32_t seq_num_;
-    uint32_t crc32_;
+    uint32_t seq_num_ {0};
+    uint32_t crc32_ {0};
     std::vector<uint8_t> data_;
 };
 
