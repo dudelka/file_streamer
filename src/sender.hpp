@@ -45,7 +45,7 @@ private:
 #elif SERVER_MODE
 class Sender {
 public:
-    Sender(const std::string& send_address);
+    explicit Sender(const std::string& send_address);
 
     void ProcessPacket(const Packet& packet);
     void ProcessPacket(Packet&& packet);
