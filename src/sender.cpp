@@ -90,10 +90,11 @@ void Sender::ResendPackets() {
         while (!has_not_ack_packets_ || !should_stop_) {
             ack_lock_.cv_.wait_for(lock, microseconds(resend_timeout_));
         }
+        if (should_stop_) {
+            break;
+        }
         auto now = steady_clock::now();
-        //uint64_t current_time = duration_cast<microseconds>(now).count();
         auto& packet = not_ack_packets_.front();
-        //if (current_time - packet.time_ < resend_timeout_) {
         if (duration_cast<microseconds>(now - packet.time_).count() < resend_timeout_) {
             continue;
         }
