@@ -1,6 +1,7 @@
 #include "commandline.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <iostream>
 #include <exception>
 #include <utility>
@@ -77,12 +78,19 @@ uint32_t CommandlineParser::GetTimeout() const {
     return timeout_;
 }
 
+#define BREAK_IF_END(container, it, opt_name)               \
+    if (it == container.end()) {                            \
+        std::string error_msg = "Option " + opt_name        \
+            + " was specified but no value was provided";    \
+        throw std::invalid_argument(error_msg);             \
+    }
+
 void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
     std::list<std::string> args(argv, argv + argc);
     args.pop_front(); // because first argument is program name
 
-    auto it = std::find(args.begin(), args.end(), "--help");
-    if (it != args.end()) {
+    auto help_it = std::find(args.begin(), args.end(), "--help");
+    if (help_it != args.end()) {
         Usage(argv[0]);
         exit(0);
     }
@@ -90,19 +98,23 @@ void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
     for (auto it = args.begin(); it != args.end(); ++it) {
         if (*it == "--send_address") {
             ++it;
+            BREAK_IF_END(args, it, *std::prev(it))
             send_address_ = std::move(*it);
         } else if (*it == "--receive_address") {
             ++it;
+            BREAK_IF_END(args, it, *std::prev(it))
             receive_address_ = std::move(*it);
         } 
 #ifdef CLIENT_MODE
         else if (*it == "--file") {
             ++it;
+            BREAK_IF_END(args, it, *std::prev(it))
             files_.emplace_back(std::move(*it));
         } 
 #endif
         else if (*it == "--timeout") {
             ++it;
+            BREAK_IF_END(args, it, *std::prev(it))
             timeout_ = std::stoi(*it);
             if (timeout_ == 0) {
                 std::cerr << "Timeout can't be 0. Set to default." << std::endl;
