@@ -87,7 +87,7 @@ void Sender::ResendPackets() {
     using namespace std::chrono;
     while (!should_stop_) {
         std::unique_lock<std::mutex> lock(ack_lock_.m_);
-        while (!has_not_ack_packets_ || !should_stop_) {
+        while (!has_not_ack_packets_ && !should_stop_) {
             ack_lock_.cv_.wait_for(lock, microseconds(resend_timeout_));
         }
         if (should_stop_) {
