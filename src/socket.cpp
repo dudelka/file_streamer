@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-Socket::Socket(const std::string& address, const SocketType type) 
-        : sock_(InitSocket(address, type)) {
+Socket::Socket(const std::string& address, const SocketType type)
+        : address_(InitAddress(address))
+        , sock_(InitSocket(address_, address, type)) {
     if (type == SocketType::RECEIVER) {
         timeval tv;
         tv.tv_sec = 0;
@@ -61,16 +62,16 @@ sockaddr_in Socket::InitAddress(std::string_view address) {
     return result;
 }
 
-int Socket::InitSocket(const std::string& address, const SocketType type) {
-    address_ = InitAddress(address);
-    sock_ = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock_ < 0) {
+int Socket::InitSocket(const sockaddr_in& address, const std::string& address_str, 
+        const SocketType type) {
+    int result = socket(AF_INET, SOCK_DGRAM, 0);
+    if (result < 0) {
         throw std::runtime_error("Can't create socket.");
     }
     if (type == SocketType::RECEIVER) {
-        if (bind(sock_, (sockaddr*)&address_, sizeof(address_) < 0)) {
-            throw std::runtime_error("Can't bind socket on address " + address);
+        if (bind(result, (sockaddr*)&address, sizeof(address) < 0)) {
+            throw std::runtime_error("Can't bind socket on address " + address_str);
         }
     }
-    return sock_;
+    return result;
 }

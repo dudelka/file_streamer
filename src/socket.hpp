@@ -4,6 +4,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -33,11 +34,12 @@ public:
     std::optional<Packet> ReceivePacket();
 
 private:
-    int sock_;
     sockaddr_in address_;
+    int sock_;
 
     Packet received_packet_;
 
     sockaddr_in InitAddress(std::string_view address);
-    int InitSocket(const std::string& address, const SocketType type);
+    int InitSocket(const sockaddr_in& address, 
+        const std::string& address_str, const SocketType type);
 };
