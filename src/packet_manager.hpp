@@ -34,7 +34,7 @@ private:
 
 class PacketManager {
 public:
-    PacketManager(std::shared_ptr<Sender> sender);
+    explicit PacketManager(std::shared_ptr<Sender> sender);
 
     void PushPacket(const Packet& packet);
     void PushPacket(Packet&& packet);
