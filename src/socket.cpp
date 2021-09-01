@@ -69,7 +69,7 @@ int Socket::InitSocket(const sockaddr_in& address, const std::string& address_st
         throw std::runtime_error("Can't create socket.");
     }
     if (type == SocketType::RECEIVER) {
-        if (bind(result, (sockaddr*)&address, sizeof(address) < 0)) {
+        if (bind(result, (sockaddr*)&address, sizeof(address)) < 0) {
             throw std::runtime_error("Can't bind socket on address " + address_str);
         }
     }
