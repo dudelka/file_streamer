@@ -118,17 +118,18 @@ void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
             ++it;
             BREAK_IF_END(args, it, *std::prev(it))
             timeout_ = std::stoi(*it);
-            if (timeout_ == 0) {
-                std::cerr << "Timeout can't be 0. Set to default." << std::endl;
-            }
-#ifdef CLIENT_MODE
-            timeout_ = 15;
-#elif SERVER_MODE
-            timeout_ = 30;
-#endif
         } else {
             std::cerr << "Unknown argument: " << *it << std::endl;
         }
+    }
+
+    if (timeout_ == 0) {
+        std::cerr << "Timeout can't be 0. Set to default." << std::endl;
+#ifdef CLIENT_MODE
+        timeout_ = 15;
+#elif SERVER_MODE
+        timeout_ = 30;
+#endif
     }
 }
 
