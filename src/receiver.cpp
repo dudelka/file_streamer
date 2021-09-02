@@ -87,7 +87,7 @@ Receiver::Receiver(const std::string& receive_address,
 
 void Receiver::Run() {
     Timer timer(std::shared_ptr<Receiver>(this), timeout_);
-    std::thread timer_thread([&timer]{timer.Run();});
+    std::thread timer_thread{&Timer::Run, &timer};
     while (!should_stop_) {
         std::optional<Packet> packet = sock_.ReceivePacket();
         if (packet == std::nullopt) {

@@ -21,9 +21,9 @@ int main(const int argc, const char* argv[]) {
         std::shared_ptr<Sender> sender = std::make_shared<Sender>(
             commandline_args.GetSendAddress(), commandline_args.GetTimeout()
         );
-        std::thread sender_thread([sender]{sender->Run();});
         Receiver receiver(commandline_args.GetReceiveAddress(), sender, std::move(files));
         receiver.Connect(sender);
+        std::thread sender_thread{&Sender::Run, sender.get()};
         receiver.Run();
         // pair id -> checksum
         std::vector<std::pair<uint32_t, uint32_t>> sent_checksums =

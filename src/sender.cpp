@@ -30,7 +30,7 @@ void Sender::PushPacket(Packet packet) {
 
 void Sender::Run() {
     using namespace std::chrono;
-    std::thread resend_thread([this]{this->ResendPackets();});
+    std::thread resend_thread{&Sender::ResendPackets, this};
     while (!should_stop_) {
         std::unique_lock<std::mutex> lock(fifo_lock_.m_);
         while (!has_packets_ && !should_stop_) {
