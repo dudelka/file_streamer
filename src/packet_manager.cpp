@@ -1,5 +1,6 @@
 #include "packet_manager.hpp"
 
+#include <iostream>
 #include <thread>
 #include <chrono>
 #include <utility>
@@ -34,12 +35,14 @@ void PacketManager::AckPacket(const Packet& packet, Multithreaded* receiver) {
 
 void PacketManager::AckPacket(Packet&& packet, Multithreaded* receiver) {
     if (!receiver) {
-        throw std::invalid_argument("Pointer to Receiver should not be nullptr");
+        throw std::invalid_argument("Pointer to Receiver should not be nullptr.");
     }
     if (static_cast<PacketType>(packet.type_) == PacketType::ACK) {
         sender_->AckPacket(GetPacketId(packet), packet.seq_number_);
     }
     if (packet.seq_number_ == packet.seq_total_) {
+        std::cerr << "[PacketManager] File with id = " << GetPacketId(packet) 
+            << "was fully sent to server." << std::endl;
         crc32_ = packet.crc32_;
         receiver->Stop();
     }
@@ -53,8 +56,6 @@ uint32_t PacketManager::GetReceivedChecksum() const {
     return crc32_;
 }
 #elif SERVER_MODE
-#include <iostream>
-
 PacketManager::PacketManager(std::shared_ptr<Sender> sender) 
     : sender_(sender) {
 }
@@ -69,8 +70,9 @@ void PacketManager::PushPacket(Packet&& packet) {
         uint32_t checksum = 0;
         checksum = crc32c(checksum, packet.data_, packet_size);
         if (checksum != packet.crc32_) {
-            std::cerr << "Received damaged packet with id = " << GetPacketId(packet)
-                << " and seq_number = " << packet.seq_number_ << "." << std::endl;
+            std::cerr << "[PacketManager] Received damaged packet with id = " 
+                << GetPacketId(packet) << " and seq_number = " 
+                << packet.seq_number_ << "." << std::endl;
         }
         FileChunk chunk;
         chunk.seq_num_ = packet.seq_number_;
@@ -84,8 +86,8 @@ void PacketManager::PushPacket(Packet&& packet) {
     ack_packet.seq_total_ = seq_numbers_.size();
     ack_packet.size_ = PACKET_HEADER_SIZE;
     if (seq_numbers_.size() == packet.seq_total_) {
-        std::cerr << "Fully received file with id = " << GetPacketId(packet) 
-            << "." << std::endl;
+        std::cerr << "[PacketManager] Fully received file with id = " 
+            << GetPacketId(packet) << "." << std::endl;
         file_.Sort();
         ack_packet.crc32_ = file_.GetChecksum();
     }

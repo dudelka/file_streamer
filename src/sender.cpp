@@ -4,6 +4,7 @@
 
 #ifdef CLIENT_MODE
 #include <algorithm>
+#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -40,6 +41,8 @@ void Sender::Run() {
             fifo_lock_.cv_.wait_for(lock, microseconds{resend_timeout_});
         }
         if (should_stop_) {
+            std::cerr << "[Sender] Stop signal received. Stopping sender..." 
+                << std::endl;
             break;
         }
         Packet packet = std::move(fifo_.front());
@@ -49,7 +52,6 @@ void Sender::Run() {
         }
         auto now = steady_clock::now();
         packet.time_ = now;
-        //packet.time_ = duration_cast<microseconds>(now - 0).count();
         sock_.SendPacket(packet);
         std::unique_lock<std::mutex> ack_lock(ack_lock_.m_);
         not_ack_packets_.push_back(std::move(packet));

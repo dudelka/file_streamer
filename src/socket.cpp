@@ -39,7 +39,7 @@ std::optional<Packet> Socket::ReceivePacket() {
         return std::nullopt;
     }
     if (ret != received_packet_.size_) {
-        throw std::runtime_error("Receiving error. Received bytes doesn't match to bytes to be received");
+        throw std::runtime_error("Receiving error. Received bytes doesn't match to bytes to be received.");
     }
     received_packet_.Deserialize();
     return received_packet_;
@@ -70,7 +70,7 @@ int Socket::InitSocket(const sockaddr_in& address, const std::string& address_st
     }
     if (type == SocketType::RECEIVER) {
         if (bind(result, (sockaddr*)&address, sizeof(address)) < 0) {
-            throw std::runtime_error("Can't bind socket on address " + address_str);
+            throw std::runtime_error("Can't bind socket on address " + address_str + ".");
         }
     }
     return result;

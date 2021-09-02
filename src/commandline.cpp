@@ -30,7 +30,7 @@ void Usage(const std::string& program_name) {
 #ifdef CLIENT_MODE
     std::cerr << "Note that arguments should contain at least one --file option." << std::endl;
 #endif
-    std::cerr << "Options --send_address and --receive_address are required" << std::endl;
+    std::cerr << "Options --send_address and --receive_address are required." << std::endl;
 }
 
 void PrintUsage(const std::string& program_name) {
@@ -83,7 +83,7 @@ uint32_t CommandlineParser::GetTimeout() const {
 #define BREAK_IF_END(container, it, opt_name)               \
     if (it == container.end()) {                            \
         std::string error_msg = "Option " + opt_name        \
-            + " was specified but no value was provided";    \
+            + " was specified but no value was provided.";    \
         throw std::invalid_argument(error_msg);             \
     }
 
@@ -119,7 +119,7 @@ void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
             BREAK_IF_END(args, it, *std::prev(it))
             timeout_ = std::stoi(*it);
         } else {
-            std::cerr << "Unknown argument: " << *it << std::endl;
+            std::cerr << "Unknown argument: " << *it << "." << std::endl;
         }
     }
 

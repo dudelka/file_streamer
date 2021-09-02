@@ -16,13 +16,17 @@ Receiver::Receiver(const std::string& receive_address,
 }
 
 void Receiver::Connect(std::shared_ptr<Sender> sender) {
+    std::cerr << "[Receiver] Establishing connection with server..." << std::endl;
     ReceiveControlPackets(sender, std::mem_fn(&Sender::Connect), 
         PacketType::CONNECT_RESPONSE);
+    std::cerr << "[Receiver] Connection with server has been established." << std::endl;
 }
 
 void Receiver::Shutdown(std::shared_ptr<Sender> sender) {
+    std::cerr << "[Receiver] Sending shutdown request to server..." << std::endl;
     ReceiveControlPackets(sender, std::mem_fn(&Sender::Shutdown), 
         PacketType::SHUTDOWN_RESPONSE);
+    std::cerr << "[Receiver] Server received shutdown request." << std::endl;
 }
 
 void Receiver::Run() {
@@ -37,7 +41,7 @@ void Receiver::Run() {
         }
         uint32_t id = GetPacketId(*packet);
         if (packet_managers_.count(id) == 0) {
-            std::cerr << "[Receiver] Received packet with id that wasn't sent to server" 
+            std::cerr << "[Receiver] Received packet with id that wasn't sent to server." 
                 << std::endl;
             continue;
         }
@@ -51,6 +55,7 @@ void Receiver::Run() {
 void Receiver::Stop() {
     stopped_managers_count_ += 1;
     if (stopped_managers_count_ == packet_managers_.size()) {
+        std::cerr << "[Receiver] Stop signal received. Stopping receiver..." << std::endl;
         should_stop_ = true;
     }
 }
@@ -91,6 +96,8 @@ void Receiver::Run() {
         timer.NotifyHasInput();
         switch (static_cast<PacketType>(packet->type_)) {
             case PacketType::CONNECT : {
+                std::cerr << "[Receiver] Processing connect request from client." 
+                    << std::endl;
                 Packet response;
                 response.size_ = PACKET_HEADER_SIZE;
                 response.type_ = static_cast<uint8_t>(PacketType::CONNECT_RESPONSE);
@@ -104,13 +111,15 @@ void Receiver::Run() {
                 packet_managers_.at(id).PushPacket(std::move(*packet));
                 break;
             } case PacketType::SHUTDOWN : {
+                std::cerr << "[Receiver] Processing shutdown request from client." 
+                    << std::endl;
                 Packet response;
                 response.size_ = PACKET_HEADER_SIZE;
                 response.type_ = static_cast<uint8_t>(PacketType::SHUTDOWN_RESPONSE);
                 sender_->ProcessPacket(std::move(response));
                 break;
             } default :
-                std::cerr << "Unsupported packet type for server. Skip it" << std::endl;
+                std::cerr << "Unsupported packet type for server. Skip it." << std::endl;
                 break;
         }
     }
