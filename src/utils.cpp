@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <iostream>
 #include <thread>
+#include <cstring>
+
+void Multithreaded::Stop() {
+    should_stop_ = true;
+}
 
 uint32_t crc32c(uint32_t crc, const unsigned char *buf, size_t len) {
     int k;
@@ -13,6 +18,12 @@ uint32_t crc32c(uint32_t crc, const unsigned char *buf, size_t len) {
         crc = crc & 1 ? (crc >> 1) ^ 0x82f63b78 : crc >> 1;
     }
     return ~crc;
+}
+
+uint32_t GetPacketId(const Packet& packet) {
+    uint32_t result = 0;
+    std::memcpy(&result, packet.id_, sizeof(result));
+    return result;
 }
 
 #ifdef CLIENT_MODE
@@ -28,10 +39,6 @@ void Sort(std::vector<std::pair<uint32_t, uint32_t>>& to_sort) {
     );
 }
 #endif
-
-void Multithreaded::Stop() {
-    should_stop_ = true;
-}
 
 #ifdef SERVER_MODE
 Timer::Timer(std::shared_ptr<Multithreaded> multithreaded, uint32_t timeout) 
