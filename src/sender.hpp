@@ -20,8 +20,7 @@ public:
     void Connect();
     void Shutdown();
 
-    void PushPacket(const Packet& packet);
-    void PushPacket(Packet&& packet);
+    void PushPacket(Packet packet);
 
     virtual void Run() override;
 

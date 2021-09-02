@@ -21,11 +21,7 @@ void Sender::Shutdown() {
     SendControlPacket(PacketType::SHUTDOWN);
 }
 
-void Sender::PushPacket(const Packet& packet) {
-    PushPacket(std::move(packet));
-}
-
-void Sender::PushPacket(Packet&& packet) {
+void Sender::PushPacket(Packet packet) {
     std::unique_lock<std::mutex> lock(fifo_lock_.m_);
     fifo_.push(std::move(packet));
     has_packets_ = true;
