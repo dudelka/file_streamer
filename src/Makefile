@@ -2,7 +2,7 @@ outdir = build/
 client_outdir = $(outdir)/client
 server_outdir = $(outdir)/server
 
-mode_independed_src = file.cpp packet.cpp socket.cpp
+mode_independed_src = file.cpp socket.cpp
 mode_depended_src = commandline.cpp packet_manager.cpp receiver.cpp \
 	sender.cpp utils.cpp
 
