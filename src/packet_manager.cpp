@@ -38,7 +38,7 @@ void PacketManager::AckPacket(const Packet& packet, Multithreaded* receiver) {
     }
     if (packet.seq_number_ == packet.seq_total_) {
         std::cerr << "[PacketManager] File with id = " << GetPacketId(packet) 
-            << "was fully sent to server." << std::endl;
+            << " was fully sent to server." << std::endl;
         crc32_ = packet.crc32_;
         receiver->Stop();
     }
