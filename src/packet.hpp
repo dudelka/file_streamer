@@ -27,9 +27,10 @@ struct Packet {
     uint8_t type_;
     uint8_t id_[8];
     uint8_t data_[MAX_PAYLOAD_SIZE];
-    
-    void Serialize();
-    void Deserialize();
 };
 
-uint32_t GetPacketId(const Packet& packet);
+uint32_t GetPacketId(const Packet& packet) {
+    uint32_t result = 0;
+    std::memcpy(&result, packet.id_, sizeof(result));
+    return result;
+}

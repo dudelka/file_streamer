@@ -26,7 +26,6 @@ void Socket::SendPacket(Packet* packet_ptr) {
         throw std::invalid_argument("Pointer to packet can't be nullptr.");
     }
     Packet& packet = *packet_ptr;
-    packet.Serialize();
     ssize_t ret = sendto(sock_, (void*)&packet, packet.size_, 0, 
         (sockaddr*)&address_, sizeof(address_));
     if (ret != packet.size_) {
@@ -47,7 +46,6 @@ std::optional<Packet> Socket::ReceivePacket() {
         perror("Socket receive: ");
         throw std::runtime_error("Receiving error. Received bytes doesn't match to bytes to be received.");
     }
-    received_packet_.Deserialize();
     return received_packet_;
 }
 
