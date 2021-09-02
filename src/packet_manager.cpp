@@ -56,11 +56,7 @@ PacketManager::PacketManager(std::shared_ptr<Sender> sender)
     : sender_(sender) {
 }
 
-void PacketManager::PushPacket(const Packet& packet) {
-    PushPacket(std::move(packet));
-}
-
-void PacketManager::PushPacket(Packet&& packet) {
+void PacketManager::PushPacket(Packet packet) {
     if (seq_numbers_.count(packet.seq_number_) == 0) {
         size_t packet_size = packet.size_ - PACKET_HEADER_SIZE;
         uint32_t checksum = 0;
