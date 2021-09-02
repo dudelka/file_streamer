@@ -28,8 +28,7 @@ public:
     Socket& operator=(const Socket&) = delete;
     Socket& operator=(Socket&&) = delete;
 
-    void SendPacket(const Packet& packet);
-    void SendPacket(Packet&& packet);
+    void SendPacket(Packet* packet_ptr);
 
     std::optional<Packet> ReceivePacket();
 

@@ -48,7 +48,7 @@ void Sender::Run() {
         }
         auto now = steady_clock::now();
         packet.time_ = now;
-        sock_.SendPacket(packet);
+        sock_.SendPacket(&packet);
         std::unique_lock<std::mutex> ack_lock(ack_lock_.m_);
         not_ack_packets_.push_back(std::move(packet));
         has_not_ack_packets_ = true;
@@ -78,7 +78,7 @@ void Sender::SendControlPacket(const PacketType packet_type) {
    Packet packet;
    packet.size_ = PACKET_HEADER_SIZE;
    packet.type_ = static_cast<uint8_t>(packet_type);
-   sock_.SendPacket(packet);
+   sock_.SendPacket(&packet);
 }
 
 void Sender::ResendPackets() {
@@ -96,7 +96,7 @@ void Sender::ResendPackets() {
         if (duration_cast<microseconds>(now - packet.time_).count() < resend_timeout_) {
             continue;
         }
-        sock_.SendPacket(packet);
+        sock_.SendPacket(&packet);
         not_ack_packets_.push_back(std::move(packet));
         not_ack_packets_.pop_front();
     }
@@ -106,11 +106,7 @@ Sender::Sender(const std::string& send_address)
     : sock_(send_address, SocketType::SENDER) {
 }
 
-void Sender::ProcessPacket(const Packet& packet) {
-    ProcessPacket(std::move(packet));
-}
-
-void Sender::ProcessPacket(Packet&& packet) {
-    sock_.SendPacket(std::move(packet));
+void Sender::ProcessPacket(Packet packet) {
+    sock_.SendPacket(&packet);
 }
 #endif

@@ -46,8 +46,7 @@ class Sender {
 public:
     explicit Sender(const std::string& send_address);
 
-    void ProcessPacket(const Packet& packet);
-    void ProcessPacket(Packet&& packet);
+    void ProcessPacket(Packet packet);
 
 private:
     Socket sock_;

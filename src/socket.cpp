@@ -20,11 +20,8 @@ Socket::~Socket() {
     close(sock_);
 }
 
-void Socket::SendPacket(const Packet& packet) {
-    SendPacket(std::move(packet));
-}
-
-void Socket::SendPacket(Packet&& packet) {
+void Socket::SendPacket(Packet* packet_ptr) {
+    Packet& packet = *packet_ptr;
     packet.Serialize();
     ssize_t ret = sendto(sock_, (void*)&packet, packet.size_, 0, 
         (sockaddr*)&address_, sizeof(address_));
