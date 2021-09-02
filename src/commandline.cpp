@@ -58,6 +58,8 @@ CommandlineParser::CommandlineParser(const int argc, const char* argv[]) {
     if (receive_address_.empty()) {
         LogErrorAndUsage("No receive address specified in commandline arguments.", argv[0]);
     }
+
+    PrintParsedConfig();
 }
 
 #ifdef CLIENT_MODE
@@ -128,4 +130,27 @@ void CommandlineParser::ParseArgs(const int argc, const char* argv[]) {
             std::cerr << "Unknown argument: " << *it << std::endl;
         }
     }
+}
+
+void CommandlineParser::PrintParsedConfig() const {
+    std::cout << "Parsed config:" << std::endl;
+#ifdef CLIENT_MODE
+    std::cout << "\tFiles to send:" << std::endl;
+    for (const auto& filename : files_) {
+        std::cout << "\t\t" << filename << std::endl;
+    }
+#endif
+    std::cout << "\tSend address:" << std::endl;
+    std::cout << "\t\t" << send_address_ << std::endl;
+
+    std::cout << "\tReceive address:" << std::endl;
+    std::cout << "\t\t" << receive_address_ << std::endl;
+    
+#ifdef CLIENT_MODE
+    std::string timeout_val("microseconds");
+#elif SERVER_MODE
+    std::string timeout_val("seconds");
+#endif
+    std::cout << "\tTimeout:" << std::endl;
+    std::cout << "\t\t" << timeout_ << " " << timeout_val << std::endl;
 }

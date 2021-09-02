@@ -31,4 +31,5 @@ private:
     uint32_t timeout_ {0};
 
     void ParseArgs(const int argc, const char* argv[]);
+    void PrintParsedConfig() const;
 };
