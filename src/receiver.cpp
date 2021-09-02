@@ -32,7 +32,7 @@ void Receiver::Shutdown(std::shared_ptr<Sender> sender) {
 void Receiver::Run() {
     std::unordered_map<uint32_t, std::thread> managers_threads;
     for (auto& [id, packet_manager] : packet_managers_) {
-        managers_threads[id] = std::thread([&packet_manager]{packet_manager.Run();});
+        managers_threads[id] = std::thread{&PacketManager::Run, &packet_manager};
     }
     while (!should_stop_) {
         std::optional<Packet> packet = sock_.ReceivePacket();
