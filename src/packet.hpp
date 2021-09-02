@@ -25,6 +25,6 @@ struct Packet {
     uint32_t size_ {0};
     uint32_t crc32_ {0};
     uint8_t type_;
-    uint8_t id_[8];
-    uint8_t data_[MAX_PAYLOAD_SIZE];
+    uint8_t id_[8]{};
+    uint8_t data_[MAX_PAYLOAD_SIZE]{};
 };
