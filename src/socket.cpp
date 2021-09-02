@@ -21,6 +21,9 @@ Socket::~Socket() {
 }
 
 void Socket::SendPacket(Packet* packet_ptr) {
+    if (!packet_ptr) {
+        throw std::invalid_argument("Pointer to packet can't be nullptr.");
+    }
     Packet& packet = *packet_ptr;
     packet.Serialize();
     ssize_t ret = sendto(sock_, (void*)&packet, packet.size_, 0, 
