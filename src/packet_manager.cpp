@@ -75,6 +75,7 @@ void PacketManager::PushPacket(Packet&& packet) {
         chunk.crc32_ = packet.crc32_;
         chunk.data_.reserve(packet_size);
         std::memmove(chunk.data_.data(), packet.data_, packet_size);
+        file_.AddChunk(std::move(chunk));
         seq_numbers_.insert(packet.seq_number_);
     }
     Packet ack_packet;

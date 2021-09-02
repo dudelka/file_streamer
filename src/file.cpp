@@ -36,21 +36,8 @@ std::vector<FileChunk>* File::GetFile() {
     return &file_chunks_;
 }
 
-void File::AddChunk(const Packet& packet) {
-    AddChunk(std::move(packet));
-}
-
-void File::AddChunk(Packet&& packet) {
-    if (seq_nums_.count(packet.seq_number_) == 0) {
-        FileChunk chunk;
-        chunk.seq_num_ = packet.seq_number_;
-        chunk.crc32_ = packet.crc32_;
-        size_t data_size = packet.size_ - PACKET_HEADER_SIZE;
-        chunk.data_.reserve(data_size);
-        std::memmove(chunk.data_.data(), packet.data_, data_size);
-        file_chunks_.push_back(std::move(chunk));
-        seq_nums_.insert(packet.seq_number_);
-    }
+void File::AddChunk(FileChunk chunk) {
+    file_chunks_.emplace_back(std::move(chunk));
 }
 
 void File::Sort() {

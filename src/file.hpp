@@ -22,8 +22,7 @@ public:
     uint32_t GetId() const;
     std::vector<FileChunk>* GetFile();
 
-    void AddChunk(const Packet& packet);
-    void AddChunk(Packet&& packet);
+    void AddChunk(FileChunk chunk);
     void Sort();
 
 private:
