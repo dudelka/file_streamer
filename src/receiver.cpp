@@ -45,7 +45,7 @@ void Receiver::Run() {
                 << std::endl;
             continue;
         }
-        packet_managers_.at(id).AckPacket(std::move(*packet), this);
+        packet_managers_.at(id).AckPacket(*packet, this);
     }
     for (auto& [id, manager_thread] : managers_threads) {
         manager_thread.join();

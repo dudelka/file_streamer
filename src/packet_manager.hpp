@@ -18,7 +18,6 @@ public:
 
     void Run();
     void AckPacket(const Packet& packet, Multithreaded* receiver);
-    void AckPacket(Packet&& packet, Multithreaded* receiver);
 
     uint32_t GetFileChecksum();
     uint32_t GetReceivedChecksum() const;

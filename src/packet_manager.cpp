@@ -30,10 +30,6 @@ void PacketManager::Run() {
 }
 
 void PacketManager::AckPacket(const Packet& packet, Multithreaded* receiver) {
-    AckPacket(std::move(packet), receiver);
-}
-
-void PacketManager::AckPacket(Packet&& packet, Multithreaded* receiver) {
     if (!receiver) {
         throw std::invalid_argument("Pointer to Receiver should not be nullptr.");
     }
