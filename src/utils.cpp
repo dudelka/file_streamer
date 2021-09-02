@@ -41,9 +41,12 @@ void Sort(std::vector<std::pair<uint32_t, uint32_t>>& to_sort) {
 #endif
 
 #ifdef SERVER_MODE
-Timer::Timer(std::shared_ptr<Multithreaded> multithreaded, uint32_t timeout) 
-    : multithreaded_(multithreaded)
-    , timeout_(timeout) {
+Timer::Timer(Multithreaded* multithreaded, uint32_t timeout) 
+        : multithreaded_(multithreaded)
+        , timeout_(timeout) {
+    if (!multithreaded_) {
+        throw std::invalid_argument("[Timer] Pointer to Multithreaded can't be nullptr");
+    }
 }
 
 void Timer::Run() {

@@ -39,13 +39,13 @@ void Sort(std::vector<std::pair<uint32_t, uint32_t>>& to_sort);
 #ifdef SERVER_MODE
 class Timer : public Multithreaded {
 public:
-    Timer(std::shared_ptr<Multithreaded> multithreaded, const uint32_t timeout);
+    Timer(Multithreaded* multithreaded, const uint32_t timeout);
 
     virtual void Run() override;
     void NotifyHasInput();
 
 private:
-    std::shared_ptr<Multithreaded> multithreaded_;
+    Multithreaded* multithreaded_;
     uint32_t timeout_;
     std::atomic<bool> has_input_ {false};
 };
