@@ -69,7 +69,7 @@ void PacketManager::PushPacket(Packet packet) {
         FileChunk chunk;
         chunk.seq_num_ = packet.seq_number_;
         chunk.crc32_ = packet.crc32_;
-        chunk.data_.reserve(packet_size);
+        chunk.data_.resize(packet_size);
         std::memmove(chunk.data_.data(), packet.data_, packet_size);
         file_.AddChunk(std::move(chunk));
         seq_numbers_.insert(packet.seq_number_);
