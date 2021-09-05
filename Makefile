@@ -1,4 +1,5 @@
-outdir = build/
+srcdir = src
+outdir = build
 client_outdir = $(outdir)/client
 server_outdir = $(outdir)/server
 
@@ -6,7 +7,7 @@ mode_independed_src = file.cpp socket.cpp
 mode_depended_src = commandline.cpp packet_manager.cpp receiver.cpp \
 	sender.cpp utils.cpp
 
-objects = $(patsubst %.cpp, $(outdir)/%.o, $(mode_independed_src))
+objects := $(patsubst %.cpp, $(outdir)/%.o, $(mode_independed_src))
 
 client_objects := $(patsubst %.cpp, $(client_outdir)/%.o, $(mode_depended_src))
 client_objects += $(client_outdir)/client.o
@@ -31,13 +32,13 @@ server: $(objects) $(server_objects)
 	$(CXX) $(CXXFLAGS) -I $(outdir) -I $(server_outdir) -DSERVER_MODE \
 		$(objects) $(server_objects) -o $@
 
-$(objects): $(outdir)/%.o: %.cpp
+$(objects): $(outdir)/%.o: $(srcdir)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(client_objects): $(client_outdir)/%.o: %.cpp
+$(client_objects): $(client_outdir)/%.o: $(srcdir)/%.cpp
 	$(CXX) $(CXXFLAGS) -DCLIENT_MODE -c $< -o $@
 
-$(server_objects): $(server_outdir)/%.o: %.cpp
+$(server_objects): $(server_outdir)/%.o: $(srcdir)/%.cpp
 	$(CXX) $(CXXFLAGS) -DSERVER_MODE -c $< -o $@
 
 check:
