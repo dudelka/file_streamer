@@ -79,8 +79,11 @@ void PacketManager::PushPacket(Packet packet) {
     ack_packet.seq_total_ = seq_numbers_.size();
     ack_packet.size_ = PACKET_HEADER_SIZE;
     if (seq_numbers_.size() == packet.seq_total_) {
-        std::cerr << "[PacketManager] Fully received file with id = " 
-            << GetPacketId(packet) << "." << std::endl;
+        if (!fully_received_) {
+            std::cerr << "[PacketManager] Fully received file with id = " 
+                << GetPacketId(packet) << "." << std::endl;
+            fully_received_ = true;
+        }
         file_.Sort();
         ack_packet.crc32_ = file_.GetChecksum();
     }

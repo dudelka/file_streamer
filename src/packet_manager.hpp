@@ -41,5 +41,6 @@ private:
     std::shared_ptr<Sender> sender_;
     File file_;
     std::unordered_set<uint32_t> seq_numbers_;
+    bool fully_received_ {false};
 };
 #endif

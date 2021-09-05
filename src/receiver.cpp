@@ -88,6 +88,7 @@ Receiver::Receiver(const std::string& receive_address,
 void Receiver::Run() {
     Timer timer(this, timeout_);
     std::thread timer_thread{&Timer::Run, &timer};
+    bool connected = false, shutdowned = false;
     while (!should_stop_) {
         std::optional<Packet> packet = sock_.ReceivePacket();
         if (packet == std::nullopt) {
@@ -96,8 +97,11 @@ void Receiver::Run() {
         timer.NotifyHasInput();
         switch (static_cast<PacketType>(packet->type_)) {
             case PacketType::CONNECT : {
-                std::cerr << "[Receiver] Processing connect request from client." 
-                    << std::endl;
+                if (!connected) {
+                    std::cerr << "[Receiver] Processing connect request from client." 
+                        << std::endl;
+                    connected = true;
+                }
                 Packet response;
                 response.size_ = PACKET_HEADER_SIZE;
                 response.type_ = static_cast<uint8_t>(PacketType::CONNECT_RESPONSE);
@@ -111,8 +115,11 @@ void Receiver::Run() {
                 packet_managers_.at(id).PushPacket(std::move(*packet));
                 break;
             } case PacketType::SHUTDOWN : {
-                std::cerr << "[Receiver] Processing shutdown request from client." 
-                    << std::endl;
+                if (!shutdowned) {
+                    std::cerr << "[Receiver] Processing shutdown request from client." 
+                        << std::endl;
+                    shutdowned = true;
+                }
                 Packet response;
                 response.size_ = PACKET_HEADER_SIZE;
                 response.type_ = static_cast<uint8_t>(PacketType::SHUTDOWN_RESPONSE);
