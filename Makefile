@@ -41,6 +41,9 @@ $(client_objects): $(client_outdir)/%.o: $(srcdir)/%.cpp
 $(server_objects): $(server_outdir)/%.o: $(srcdir)/%.cpp
 	$(CXX) $(CXXFLAGS) -DSERVER_MODE -c $< -o $@
 
+run_tests:
+	cd tests && ./run_test.py
+
 check:
 	cppcheck --enable=all -DCLIENT_MODE *.cpp *.hpp
 	cppcheck --enable=all -DSERVER_MODE *.cpp *.hpp
@@ -48,4 +51,4 @@ check:
 clean:
 	rm -r $(outdir) client server
 
-.PHONY: all check clean
+.PHONY: all run_tests check clean
