@@ -106,7 +106,7 @@ Receiver -> PacketType::PUT -                         --> PacketType::ACK -> Sen
 #### Клиент 
 
 ```
-./client --file --send_address <ip>:<port> --receive_address <ip>:<port>
+./client --file <filename> --send_address <ip>:<port> --receive_address <ip>:<port>
 ```
 
 #### Сервер
