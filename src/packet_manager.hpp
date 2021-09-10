@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <unordered_set>
 
 #ifdef CLIENT_MODE
 #include <atomic>
@@ -25,12 +26,13 @@ public:
 private:
     std::shared_ptr<Sender> sender_;
     File file_;
+    const size_t total_packets_count_ {0};
     std::queue<Packet> fifo_;
+    // this set contains sequence numbers of acknowledged packets
+    std::unordered_set<uint32_t> acknowledged_packets_;
     uint32_t crc32_ {0};
 };
 #elif SERVER_MODE
-#include <unordered_set>
-
 class PacketManager {
 public:
     explicit PacketManager(std::shared_ptr<Sender> sender);

@@ -9,7 +9,8 @@
 #ifdef CLIENT_MODE
 PacketManager::PacketManager(std::shared_ptr<Sender> sender, File file)
     : sender_(sender) 
-    , file_(std::move(file)) {
+    , file_(std::move(file)) 
+    , total_packets_count_(file_.GetFile()->size()) {
 }
 
 void PacketManager::Run() {
@@ -33,13 +34,16 @@ void PacketManager::AckPacket(const Packet& packet, Multithreaded* receiver) {
     if (!receiver) {
         throw std::invalid_argument("Pointer to Receiver should not be nullptr.");
     }
+    acknowledged_packets_.insert(packet.seq_number_);
     if (static_cast<PacketType>(packet.type_) == PacketType::ACK) {
         sender_->AckPacket(GetPacketId(packet), packet.seq_number_);
     }
-    if (packet.seq_number_ == packet.seq_total_) {
+    if (packet.crc32_ != 0) {
+        crc32_ = packet.crc32_;
+    }
+    if (acknowledged_packets_.size() == total_packets_count_ && crc32_ != 0) {
         std::cerr << "[PacketManager] File with id = " << GetPacketId(packet) 
             << " was fully sent to server." << std::endl;
-        crc32_ = packet.crc32_;
         receiver->Stop();
     }
 }
