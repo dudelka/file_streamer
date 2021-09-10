@@ -3,7 +3,6 @@
 #include "packet.hpp"
 
 #include <cstdint>
-#include <unordered_set>
 #include <vector>
 #include <string>
 
@@ -29,9 +28,6 @@ private:
     uint64_t id_ {0};
     uint32_t crc32_ {0};
     std::vector<FileChunk> file_chunks_;
-    // contains seq_nums of chunks that file_chunks_ has
-    // only needed for receiver to drop repeated packets
-    std::unordered_set<uint32_t> seq_nums_;
 
     std::vector<FileChunk> DivideIntoChunks(std::ifstream& file, 
         const size_t chunk_size);
