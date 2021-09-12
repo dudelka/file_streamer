@@ -31,6 +31,7 @@ private:
     // this set contains sequence numbers of acknowledged packets
     std::unordered_set<uint32_t> acknowledged_packets_;
     uint32_t crc32_ {0};
+    bool fully_received_ {false};
 };
 #elif SERVER_MODE
 class PacketManager {

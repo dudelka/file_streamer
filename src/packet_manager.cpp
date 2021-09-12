@@ -41,10 +41,12 @@ void PacketManager::AckPacket(const Packet& packet, Multithreaded* receiver) {
     if (packet.crc32_ != 0) {
         crc32_ = packet.crc32_;
     }
-    if (acknowledged_packets_.size() == total_packets_count_ && crc32_ != 0) {
+    if (!fully_received_ && 
+            acknowledged_packets_.size() == total_packets_count_ && crc32_ != 0) {
         std::cerr << "[PacketManager] File with id = " << GetPacketId(packet) 
             << " was fully sent to server." << std::endl;
         receiver->Stop();
+        fully_received_ = true;
     }
 }
 
